@@ -240,7 +240,7 @@ function ic_net_cn() {
 
     //定义数组arrDataResults,保存从每一页中截取的信息
     var arrDataResults = [];
-
+    alert('请（注册）登录ic.cn.net网站，然后搜索指定型号产品，在搜索结果页面运行“收集信息”，否则，可能会出错！');
     //获取'#resultList'层下所有li列表内容，存入resultList数组
     var resultList = document.querySelectorAll('#resultList > li');
 
