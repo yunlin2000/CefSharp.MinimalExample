@@ -281,7 +281,7 @@ function ic_net_cn() {
             }
 			var icon_xianHuo='';
             var icon_xianHuoX = resultList[i].querySelector('div.result_id > a > span.icon_xianHuo');
-			if(icon_xianHuo&&icon_xianHuo.title) icon_xianHuo=icon_xianHuoX.title;    //10货排名
+			if(icon_xianHuo&&icon_xianHuo.title) icon_xianHuo=icon_xianHuoX.title;    //10现货排名
 
             var vip = '';                                                                                     //11vip
             if (resultList[i].querySelector('p.result_icons>a.sscp')) {
