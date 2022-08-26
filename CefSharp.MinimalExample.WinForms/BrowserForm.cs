@@ -205,7 +205,7 @@ namespace CefSharp.MinimalExample.WinForms
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             try
             {
@@ -240,10 +240,15 @@ function ic_net_cn() {
 
     //定义数组arrDataResults,保存从每一页中截取的信息
     var arrDataResults = [];
-    alert('请（注册）登录ic.cn.net网站，然后搜索指定型号产品，在搜索结果页面运行“收集信息”，否则，可能会出错！');
     //获取'#resultList'层下所有li列表内容，存入resultList数组
     var resultList = document.querySelectorAll('#resultList > li');
-
+    if(resultList.length==0)
+    {
+        //提示：先（注册）登录、进入产品搜索结果页面，然后点击按钮“收集信息”
+        alert('请（注册）登录ic.cn.net网站，然后搜索指定型号产品，在搜索结果页面运行“收集信息”，否则，可能会出错！');
+        return '';
+    }
+ 
     //遍历resultList数组
     for (var i = 0; i < resultList.length; i++) {
         try {
@@ -281,7 +286,7 @@ function ic_net_cn() {
             }
 			var icon_xianHuo='';
             var icon_xianHuoX = resultList[i].querySelector('div.result_id > a > span.icon_xianHuo');
-			if(icon_xianHuo&&icon_xianHuo.title) icon_xianHuo=icon_xianHuoX.title;    //10现货排名
+			if(icon_xianHuoX&&icon_xianHuoX.title) icon_xianHuo=icon_xianHuoX.title;    //10现货排名
 
             var vip = '';                                                                                     //11vip
             if (resultList[i].querySelector('p.result_icons>a.sscp')) {
@@ -311,19 +316,58 @@ ic_net_cn();
 
 ";
                 //调用onJs()执行js代码，获取字符串
-                //var s=browser.onJs(js).Result;
+                //var s = browser.onJs(js).Result;
 
                 //调用evaluateScriptSync()方法,执行js代码，获取网页信息
                 var task = browser.EvaluateScriptAsync(js);
-                //task.ContinueWith((respA) =>
-                //{
-                //    return respA.Result.Result;
-                //}).Wait();
-                //if (!task.IsFaulted)
-                //{
-                string s = task.Result.Result.ToString();
-                MessageBox.Show(s);
-                //}
+                task.ContinueWith((respA) =>
+                {
+                    if (!respA.IsFaulted)
+                    {
+                        string s = task.Result.Result?.ToString();
+                        MessageBox.Show(s);
+                    }
+                    return respA.Result.Result;
+                }).Wait();
+
+                var result = "";
+                int count = browser.GetBrowser().GetFrameNames().Count;
+                for (int i = 0; i <count; i++)
+                {
+                    var frm = browser.GetBrowser().GetFrame(browser.GetBrowser().GetFrameNames()[i]);
+
+                    var task01 =frm.EvaluateScriptAsync(js);
+                    task01.ContinueWith(t =>
+                    {
+                        if (!t.IsFaulted)
+                        {
+                            var response = t.Result;
+                            if (response.Success == true)
+                            {
+                                if (response.Result != null)
+                                {
+                                    if (response?.Result != null && response.Result.GetType().Name == "ExpandoObject")
+                                    {
+                                        result = Newtonsoft.Json.JsonConvert.SerializeObject(response.Result);
+                                        ;
+                                    }
+                                    else
+                                    {
+                                        string resultStr = response.Result.ToString();
+                                        result = resultStr;
+                                    }
+                                }
+                            }
+                             
+                        }
+                    }).Wait();
+                    if (string.IsNullOrEmpty(result) == false)
+                    {
+                        break;
+                    }
+                }
+                //
+
 
 
                 //tb_log.AppendText(s);
@@ -333,6 +377,11 @@ ic_net_cn();
 
             }
 
+        }
+
+        private void dontDebugToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+             
         }
     }
 

@@ -42,6 +42,7 @@
             this.showDevToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
+            this.dontDebugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
@@ -133,6 +134,7 @@
             // urlTextBox
             // 
             this.urlTextBox.AutoSize = false;
+            this.urlTextBox.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
             this.urlTextBox.Name = "urlTextBox";
             this.urlTextBox.Size = new System.Drawing.Size(500, 25);
             this.urlTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UrlTextBoxKeyUp);
@@ -150,7 +152,8 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.dontDebugToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(973, 28);
@@ -182,13 +185,20 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(66, 2);
+            this.button1.Location = new System.Drawing.Point(189, 0);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
             this.button1.Text = "采集信息";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // dontDebugToolStripMenuItem
+            // 
+            this.dontDebugToolStripMenuItem.Name = "dontDebugToolStripMenuItem";
+            this.dontDebugToolStripMenuItem.Size = new System.Drawing.Size(116, 24);
+            this.dontDebugToolStripMenuItem.Text = "Don\'t Debug";
+            this.dontDebugToolStripMenuItem.Click += new System.EventHandler(this.dontDebugToolStripMenuItem_Click);
             // 
             // BrowserForm
             // 
@@ -234,5 +244,6 @@
         private System.Windows.Forms.Label statusLabel;
 		private System.Windows.Forms.ToolStripMenuItem showDevToolsToolStripMenuItem;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripMenuItem dontDebugToolStripMenuItem;
     }
 }

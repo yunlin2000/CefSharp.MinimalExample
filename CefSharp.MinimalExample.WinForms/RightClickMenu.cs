@@ -28,6 +28,7 @@ using System.Collections.Generic;
         }
         model.AddItem((CefMenuCommand)26501, "Show DevTools");
         model.AddItem((CefMenuCommand)26502, "Close DevTools");
+        model.AddItem((CefMenuCommand)26506, "Don't Debugger");
     }
 
     bool IContextMenuHandler.OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
@@ -43,6 +44,39 @@ using System.Collections.Generic;
             browser.GetHost().CloseDevTools();
             return true;
         }
+        if (commandId == (CefMenuCommand)26506)
+            {
+                var js = @"
+//去除无限debugger
+Function.prototype.__constructor_back = Function.prototype.constructor ;
+Function.prototype.constructor = function() {
+    if(arguments && typeof arguments[0]==='string'){
+       
+        if ('debugger' === arguments[0])
+                {
+                    return
+                }
+            }
+            return Function.prototype.__constructor_back.apply(this, arguments);
+        }
+";
+                for (int i = 0; i < browser.GetFrameNames().Count; i++)
+                {
+                    var task01 = browser.GetFrame(browser.GetFrameNames()[i]).EvaluateScriptAsync(js);
+                    task01.ContinueWith(t =>
+                    {
+                        if (!t.IsFaulted)
+                        {
+                            var response = t.Result;
+                            if (response.Success == true)
+                            {
+
+                            }
+                        }
+                    });
+                }
+                return true;
+            }
         return false;
     }
 
