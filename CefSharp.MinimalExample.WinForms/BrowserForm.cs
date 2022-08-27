@@ -326,6 +326,9 @@ ic_net_cn();
                     {
                         string s = task.Result.Result?.ToString();
                         MessageBox.Show(s);
+                        //ToDo:保存采集信息到文件
+                        var s1 = Newtonsoft.Json.JsonConvert.DeserializeObject(s);
+                        System.IO.File.WriteAllText("c://abc.json",s1.ToString());
                     }
                     return respA.Result.Result;
                 }).Wait();
