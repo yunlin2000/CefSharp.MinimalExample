@@ -5,6 +5,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
@@ -12,7 +13,7 @@ using System.Windows.Forms;
 namespace CefSharp.MinimalExample.WinForms
 {
     /// <summary>
-    /// c#json转excel
+    /// C#JSON转Excel
     /// 步骤:
     /// 1、将json文件 转成  DataTable类型
     /// 2、将DataTable类型 数据  导出成Excel 表格
@@ -29,27 +30,35 @@ namespace CefSharp.MinimalExample.WinForms
             //System.Windows.Forms.MessageBox.Show(json);
             //json数据转成  DataTable   类型
             DataTable dataTab = toDataTableTwo(json);
-            //调用另存为  系统文件窗口
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            //设置文件类型
-            saveFileDialog.FileName = tabName;  //导出excel的默认名称
-            saveFileDialog.Filter = "Excel files(*.xls)|*.xls|All files(*.*)|*.*";
-            //保存对话框是否记忆上次打开的目录
-            saveFileDialog.RestoreDirectory = true;
-            //String DialogResult = saveFileDialog.ShowDialog();
-            //点了保存按钮进入
-            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            //调用 OLE 之前，必须将当前线程设置为单线程单元(STA)模式
+            Thread t = new Thread((ThreadStart)(()=>
             {
-                //获得文件路径
-                String localFilePath = saveFileDialog.FileName.ToString();
-                //System.Windows.Forms.MessageBox.Show(localFilePath);
-                dataTableToCsv(dataTab, localFilePath);
-                meg = "success";
+                //调用另存为  系统文件窗口
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                //设置文件类型
+                saveFileDialog.FileName = tabName;  //导出excel的默认名称
+                saveFileDialog.Filter = "Excel files(*.xls)|*.xls|All files(*.*)|*.*";
+                //保存对话框是否记忆上次打开的目录
+                saveFileDialog.RestoreDirectory = true;
+                //String DialogResult = saveFileDialog.ShowDialog();
+                //点了保存按钮进入
+                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    //获得文件路径
+                    String localFilePath = saveFileDialog.FileName.ToString();
+                    //System.Windows.Forms.MessageBox.Show(localFilePath);
+                    dataTableToCsv(dataTab, localFilePath);
+                    meg = "success";
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("导出失败");
+                }
             }
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("导出失败");
-            }
+            ));
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
             return meg;
         }
         ///2、将json文件 转成  DataTable类型方法

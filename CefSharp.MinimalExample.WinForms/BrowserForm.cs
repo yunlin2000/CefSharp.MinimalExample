@@ -328,7 +328,11 @@ ic_net_cn();
                         MessageBox.Show(s);
                         //ToDo:保存采集信息到文件
                         var s1 = Newtonsoft.Json.JsonConvert.DeserializeObject(s);
-                        System.IO.File.WriteAllText("c://abc.json",s1.ToString());
+                        //System.IO.File.WriteAllText("c://abc.json",s1.ToString());
+                        //将json字符串保存成excel文件
+                        JSON2Excel json2Excel = new JSON2Excel();
+                        json2Excel.jsonToDataTable(s, "abc.xls");
+
                     }
                     return respA.Result.Result;
                 }).Wait();
